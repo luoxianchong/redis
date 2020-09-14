@@ -147,4 +147,4 @@ target_link_libraries(redis-cli
         PRIVATE linenoise
         PRIVATE hiredis
         )
-link_directories(deps/hiredis/ deps/linenoise/ diredeps/lua/src)
+link_directories(deps/hiredis/ deps/linenoise/ deps/lua/src)
