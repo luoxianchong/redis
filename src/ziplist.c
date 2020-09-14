@@ -269,7 +269,12 @@
  * Note that this is not how the data is actually encoded, is just what we
  * get filled by a function in order to operate more easily. */
 typedef struct zlentry {
-    unsigned int prevrawlensize; /* Bytes used to encode the previous entry len*/
+    /* 前一个元素的字节长度，占用1个或5个字节
+       1、元素小于254字节长度，则占用1个字节
+       2、元素大于等于254字节长度，则占用5个字节长度，
+          并且此prevrawlensize字段中第一个字节固定是0xFE
+          后面4个字节才是正在的长度 */
+    unsigned int prevrawlensize; /* Bytes used to encode the previous entry len 前一个元素编码后的长度*/
     unsigned int prevrawlen;     /* Previous entry len. */
     unsigned int lensize;        /* Bytes used to encode this entry type/len.
                                     For example strings have a 1, 2 or 5 bytes
@@ -296,7 +301,10 @@ typedef struct zlentry {
 }
 
 /* Extract the encoding from the byte pointed by 'ptr' and set it into
- * 'encoding' field of the zlentry structure. */
+ * 'encoding' field of the zlentry structure.
+ * zip_str_mask 0xc0  1100 0000
+ * 小于 0xc0  表示 字节数组 （因为zentry 可以是 字节数组或整数）
+* */
 #define ZIP_ENTRY_ENCODING(ptr, encoding) do {  \
     (encoding) = (ptr[0]); \
     if ((encoding) < ZIP_STR_MASK) (encoding) &= ZIP_STR_MASK; \
