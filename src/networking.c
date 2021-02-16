@@ -2969,6 +2969,9 @@ void *IOThreadMain(void *myid) {
     }
 }
 
+/**
+ * IO线程进行初始化,包含主线程
+ */
 /* Initialize the data structures needed for threaded I/O. */
 void initThreadedIO(void) {
     server.io_threads_active = 0; /* We start with threads not active. */
